@@ -1,5 +1,9 @@
 <?php
 
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+
+use App\Http\Middleware\EnsureAdmin;
+use App\Http\Middleware\EnsureNotBanned;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -11,7 +15,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'admin' => EnsureAdmin::class,
+            'not_banned' => EnsureNotBanned::class,
+        ]);
+
+        $middleware->appendToGroup('web', EnsureNotBanned::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
