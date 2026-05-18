@@ -19,6 +19,11 @@
 
         <div class="flex items-center gap-3">
             @auth
+                <a href="{{ route('lots.create') }}" class="text-sm text-gray-700 hover:text-indigo-600">+ Лот</a>
+                <a href="{{ route('watchlist.index') }}" class="text-sm text-gray-700 hover:text-indigo-600">★ Список</a>
+                @if (auth()->user()->isAdmin())
+                    <a href="/admin/dashboard" class="text-sm font-medium text-amber-700 hover:text-amber-900">⚙ Адмін</a>
+                @endif
                 <a href="{{ route('dashboard') }}" class="text-sm text-gray-700 hover:text-indigo-600">{{ auth()->user()->name }}</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

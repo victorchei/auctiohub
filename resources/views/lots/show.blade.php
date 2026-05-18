@@ -51,19 +51,19 @@
             @endif
 
             @auth
-                @if ($lot->status === 'active' && auth()->id() !== $lot->seller_id)
-                    <form method="POST" action="#" class="mt-4 flex gap-2">
+                @if ($lot->status === 'active' && auth()->id() !== $lot->seller_id && ! auth()->user()->isBanned())
+                    <form method="POST" action="{{ route('bids.store', $lot) }}" class="mt-4 flex gap-2">
                         @csrf
                         <input type="number" step="0.01" name="amount" min="{{ $lot->minNextBid() }}" placeholder="≥ {{ number_format($lot->minNextBid(), 2, ',', ' ') }}"
-                               class="flex-1 rounded border border-gray-300 px-3 py-2 text-sm">
+                               class="flex-1 rounded border border-gray-300 px-3 py-2 text-sm" required>
                         <button type="submit" class="rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">Ставка</button>
                     </form>
-                    <p class="mt-2 text-xs text-gray-500">Ставка з'явиться у Phase 4</p>
+                    @error('amount')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                 @endif
-                <form method="POST" action="#" class="mt-3">
+                <form method="POST" action="{{ route('watchlist.toggle', $lot) }}" class="mt-3">
                     @csrf
                     <button type="submit" class="text-sm text-indigo-600 hover:underline">
-                        {{ $watching ? '★ У вашому списку' : '☆ Додати в spostere' }}
+                        {{ $watching ? '★ У вашому списку — прибрати' : '☆ Додати у спостереження' }}
                     </button>
                 </form>
             @else
@@ -95,6 +95,19 @@
 
 <section class="mt-12">
     <h2 class="text-xl font-bold">Коментарі ({{ $lot->comments->count() }})</h2>
+
+    @auth
+        <form method="POST" action="{{ route('comments.store', $lot) }}" class="mt-4 rounded-lg border border-gray-200 bg-white p-4">
+            @csrf
+            <textarea name="body" rows="3" placeholder="Ваш коментар..." required
+                      class="block w-full rounded border border-gray-300 px-3 py-2 text-sm">{{ old('body') }}</textarea>
+            @error('body')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+            <div class="mt-2 flex justify-end">
+                <button type="submit" class="rounded bg-indigo-600 px-4 py-1.5 text-sm text-white hover:bg-indigo-700">Опублікувати</button>
+            </div>
+        </form>
+    @endauth
+
     @foreach ($lot->comments as $comment)
         <div class="mt-4 rounded-lg border border-gray-200 bg-white p-4">
             <div class="text-xs text-gray-500">{{ $comment->user->name }} · {{ $comment->created_at->diffForHumans() }}</div>
