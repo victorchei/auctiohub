@@ -36,9 +36,7 @@ class BidController extends Controller
             return $bid;
         });
 
-        if (class_exists(BidPlaced::class)) {
-            event(new BidPlaced($bid));
-        }
+        BidPlaced::dispatch($bid);
 
         return redirect()->route('lots.show', $lot)->with('status', 'Ставку зроблено!');
     }
