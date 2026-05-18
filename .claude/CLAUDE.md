@@ -14,7 +14,7 @@ Inherits: [life-ecosystem CLAUDE.md](../../../../../CLAUDE.md)
 
 - [plane/backlog.md](plane/backlog.md) — беклог проекту
 - [CHANGELOG.md](CHANGELOG.md) — історія змін
-- [Plan (master)](../../.claude/plane/async-leaping-wilkinson.md) — план імплементації (JARVIS режим)
+- Master plan (видалено після завершення) — деталі у `.claude/CHANGELOG.md`
 
 ## Stack
 
