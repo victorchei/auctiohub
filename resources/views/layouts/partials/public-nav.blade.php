@@ -33,6 +33,11 @@
                 <a href="{{ route('login') }}" class="text-sm text-gray-700 hover:text-indigo-600">Увійти</a>
                 <a href="{{ route('register') }}" class="rounded bg-indigo-600 px-3 py-1.5 text-sm text-white hover:bg-indigo-700">Реєстрація</a>
             @endauth
+            <div class="border-l border-gray-200 pl-3 text-xs">
+                <a href="?lang=uk" class="@if(app()->getLocale()==='uk') font-bold text-indigo-700 @else text-gray-500 hover:text-indigo-600 @endif">UA</a>
+                <span class="text-gray-300">|</span>
+                <a href="?lang=en" class="@if(app()->getLocale()==='en') font-bold text-indigo-700 @else text-gray-500 hover:text-indigo-600 @endif">EN</a>
+            </div>
         </div>
     </div>
 </nav>
