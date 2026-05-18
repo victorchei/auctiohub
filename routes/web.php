@@ -51,4 +51,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 });
 
+Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/lots', [\App\Http\Controllers\Admin\LotModerationController::class, 'index'])->name('lots.index');
+    Route::post('/lots/{lot}/cancel', [\App\Http\Controllers\Admin\LotModerationController::class, 'cancel'])->name('lots.cancel');
+    Route::delete('/lots/{lot}', [\App\Http\Controllers\Admin\LotModerationController::class, 'destroy'])->name('lots.destroy');
+    Route::post('/lots/{id}/restore', [\App\Http\Controllers\Admin\LotModerationController::class, 'restore'])->name('lots.restore');
+    Route::post('/lots/bulk-delete', [\App\Http\Controllers\Admin\LotModerationController::class, 'bulkDelete'])->name('lots.bulkDelete');
+    Route::get('/lots/export', [\App\Http\Controllers\Admin\LotModerationController::class, 'exportCsv'])->name('lots.export');
+
+    Route::get('/users', [\App\Http\Controllers\Admin\UserAdminController::class, 'index'])->name('users.index');
+    Route::post('/users/{user}/ban', [\App\Http\Controllers\Admin\UserAdminController::class, 'ban'])->name('users.ban');
+    Route::post('/users/{user}/unban', [\App\Http\Controllers\Admin\UserAdminController::class, 'unban'])->name('users.unban');
+    Route::post('/users/{user}/promote', [\App\Http\Controllers\Admin\UserAdminController::class, 'promote'])->name('users.promote');
+
+    Route::get('/categories', [\App\Http\Controllers\Admin\CategoryAdminController::class, 'index'])->name('categories.index');
+    Route::post('/categories', [\App\Http\Controllers\Admin\CategoryAdminController::class, 'store'])->name('categories.store');
+    Route::delete('/categories/{category}', [\App\Http\Controllers\Admin\CategoryAdminController::class, 'destroy'])->name('categories.destroy');
+
+    Route::get('/audit-log', [\App\Http\Controllers\Admin\AuditLogController::class, 'index'])->name('audit.index');
+});
+
 require __DIR__.'/auth.php';
