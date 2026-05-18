@@ -13,10 +13,10 @@ class SearchController extends Controller
         $lots = collect();
 
         if ($q !== '') {
-            $term = '%'.$q.'%';
+            $term = '%'.mb_strtolower($q).'%';
             $lots = Lot::query()
                 ->where('status', 'active')
-                ->where(fn ($x) => $x->where('title', 'like', $term)->orWhere('description', 'like', $term))
+                ->where(fn ($x) => $x->whereRaw('LOWER(title) LIKE ?', [$term])->orWhereRaw('LOWER(description) LIKE ?', [$term]))
                 ->with(['seller', 'category', 'images'])
                 ->withCount('bids')
                 ->orderBy('ends_at')

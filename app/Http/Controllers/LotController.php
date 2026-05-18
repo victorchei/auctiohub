@@ -29,8 +29,8 @@ class LotController extends Controller
         }
 
         if ($request->filled('q')) {
-            $term = '%'.$request->q.'%';
-            $query->where(fn ($q) => $q->where('title', 'like', $term)->orWhere('description', 'like', $term));
+            $term = '%'.mb_strtolower($request->q).'%';
+            $query->where(fn ($q) => $q->whereRaw('LOWER(title) LIKE ?', [$term])->orWhereRaw('LOWER(description) LIKE ?', [$term]));
         }
 
         if ($request->filled('min_price')) {

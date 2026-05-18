@@ -25,10 +25,10 @@ Screenshot: [01-anon-filter-antikvariat-price-asc.png](01-anon-filter-antikvaria
 **Cause**: SQLite default LIKE collation case-sensitive для Unicode. Affects ONLY local SQLite dev.
 **On MySQL** (`utf8mb4_unicode_ci`) — case-insensitive автоматично. Production OK.
 
-**Fix options:**
-- Use `LOWER(title) LIKE LOWER(?)` у SearchController + LotController (works on both)
-- Document як SQLite limitation
-- Default plan demo to MySQL via docker-compose
+**Applied fix**: `LOWER(title) LIKE LOWER(?)` + `mb_strtolower($q)` у SearchController + LotController.
+- ✅ Works on **MySQL** (production target via docker-compose)
+- ❌ Still fails on **SQLite** — SQLite's `LOWER()` is ASCII-only by default (no ICU extension). For SQLite Cyrillic case-insensitive search потрібно: установити SQLite з ICU extension, АБО зберігати окрему колонку `title_lower` з PHP-обчисленим lowercase, АБО використовувати MySQL.
+- **Production demo**: рекомендується запускати `docker compose up -d` (MySQL 8 з utf8mb4_unicode_ci) — там пошук працює case-insensitive natively без хаків.
 
 Screenshots: [02-anon-search-karta-ukrainian.png](02-anon-search-karta-ukrainian.png) (0 results), [03-anon-search-Karta-uppercase.png](03-anon-search-Karta-uppercase.png) (also 0 — but those were `ended`), [04-anon-search-namisto-case.png](04-anon-search-namisto-case.png) (lowercase: 0), [05-anon-search-Namisto-uppercase-works.png](05-anon-search-Namisto-uppercase-works.png) (Uppercase: 1 ✓)
 
