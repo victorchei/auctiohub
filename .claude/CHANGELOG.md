@@ -85,6 +85,41 @@ Known issues:
 
 8 commits total, ~250 файлів, 19 нових feature-тестів, ~30-40 годин autonomous JARVIS work за одну сесію.
 
+## 2026-05-19
+
+### Session 2 — Quality + UX/UI + a11y + clone-and-run
+
+8 додаткових commits (всього 19):
+
+**docs(readme/student):**
+- 3 DB options (SQLite/MySQL native/Docker) для 2-курсу без Docker
+- "Що таке artisan?" секція у STUDENT_QUICKSTART
+- Force-add `.env`, `database/database.sqlite`, `public/build/` для clone-and-run
+
+**fix(search):** case-insensitive LIKE через `LOWER()` + `mb_strtolower()` — на MySQL працює, на SQLite обмежено (no ICU).
+
+**test(e2e):** full QA pass 20 тестів — anonymous (5), user (7), admin (7), mail (1). 19 pass, 1 SQLite bug (виправлено для MySQL).
+
+**feat(quality):** code-review + UX/UI + a11y:
+- User flow map ([docs/user-flow.md](../docs/user-flow.md)) — 9 Mermaid діаграм
+- 10 SVG placeholders 1200×900 + Alpine.js lightbox (Esc/Arrows, counter, aspect-ratio 4:3)
+- Повний 4-колонковий dark footer
+- 6 code-review fixes: CSV N+1, edit a11y labels, observer password redact, cancel status guard, admin search LOWER, Comment eager load
+- A11y: skip-link, focus-visible, ARIA, color contrast — 0 axe violations
+- [docs/accessibility-audit.md](../docs/accessibility-audit.md) — WCAG 2.2 AA report
+
+**test(final):** post-fix verification — 24 routes (9 public 200, 8 protected 302, 6 admin authed 200), PHPUnit 44/44, fresh screenshots.
+
+**chore(seed):** clean re-seed — 21 users, 50 lots, 234 bids.
+
+### Final state
+
+- 19 commits
+- Phase 0-8 + quality pass complete
+- WCAG 2.2 AA met (0 axe violations)
+- Production-ready demo для курсової
+- Clone-and-run для 2-курсу (.env + sqlite + build closed-committed)
+
 ### Test accounts (after `migrate:fresh --seed`)
 
 - Admin: `admin@auctiohub.test` / `password`
