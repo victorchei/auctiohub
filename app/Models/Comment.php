@@ -32,6 +32,9 @@ class Comment extends Model
 
     public function replies(): HasMany
     {
-        return $this->hasMany(Comment::class, 'parent_id')->with('user', 'replies');
+        // Без рекурсивного 'replies' у with() — щоб уникнути неконтрольованих
+        // запитів для глибоких дерев. Якщо потрібно більше рівнів —
+        // eager-load явно в контролері: `->with('comments.replies.replies.user')`
+        return $this->hasMany(Comment::class, 'parent_id')->with('user');
     }
 }

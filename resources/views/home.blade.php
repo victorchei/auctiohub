@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
 @section('content')
-<section class="rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-16 text-white shadow-lg">
-    <h1 class="text-4xl font-bold sm:text-5xl">AuctioHub</h1>
+<section class="rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-16 text-white shadow-lg" aria-labelledby="hero-title">
+    <h1 id="hero-title" class="text-4xl font-bold sm:text-5xl">AuctioHub</h1>
     <p class="mt-4 max-w-2xl text-lg text-indigo-100">
         Демо онлайн-аукціонної платформи на Laravel 11. Робіть ставки на унікальні лоти, спостерігайте за фаворитами,
         отримуйте сповіщення про обігнані ставки.
@@ -21,7 +21,7 @@
         @foreach ($categories as $category)
             <a href="{{ route('categories.show', $category) }}" class="rounded border border-gray-200 bg-white p-3 text-center text-sm font-medium text-gray-700 hover:border-indigo-400 hover:text-indigo-700">
                 {{ $category->name }}
-                <div class="text-xs text-gray-400">{{ $category->lots_count }} лотів</div>
+                <div class="text-xs text-gray-600">{{ $category->lots_count }} лотів</div>
             </a>
         @endforeach
     </div>

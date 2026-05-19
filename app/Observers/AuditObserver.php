@@ -7,14 +7,29 @@ use Illuminate\Database\Eloquent\Model;
 
 class AuditObserver
 {
+    /** Поля, які не логуються (sensitive дані). */
+    protected const REDACTED_KEYS = ['password', 'remember_token', 'api_token'];
+
     public function created(Model $model): void
     {
-        $this->log('created', $model, $model->getAttributes());
+        $this->log('created', $model, $this->redact($model->getAttributes()));
     }
 
     public function updated(Model $model): void
     {
-        $this->log('updated', $model, ['changes' => $model->getChanges(), 'original' => array_intersect_key($model->getOriginal(), $model->getChanges())]);
+        $changes = $this->redact($model->getChanges());
+        $original = $this->redact(array_intersect_key($model->getOriginal(), $model->getChanges()));
+        $this->log('updated', $model, ['changes' => $changes, 'original' => $original]);
+    }
+
+    protected function redact(array $payload): array
+    {
+        foreach (self::REDACTED_KEYS as $key) {
+            if (array_key_exists($key, $payload)) {
+                $payload[$key] = '***';
+            }
+        }
+        return $payload;
     }
 
     public function deleted(Model $model): void

@@ -1,3 +1,44 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Alpine.js x-cloak — hide elements until Alpine initializes */
+[x-cloak] { display: none !important; }
+
+/* Skip link для accessibility — visible on focus */
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    padding: 0.75rem 1rem;
+    background: #4f46e5;
+    color: white;
+    font-weight: 600;
+    border-radius: 0 0 0.5rem 0;
+}
+.skip-link:focus {
+    left: 0;
+}
+
+/* Visible focus rings — for keyboard nav (override browser default outline) */
+*:focus-visible {
+    outline: 2px solid #4f46e5;
+    outline-offset: 2px;
+}
+
+/* Improve form contrast */
+input::placeholder, textarea::placeholder {
+    color: #6b7280;
+    opacity: 1;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

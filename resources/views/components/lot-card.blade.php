@@ -1,11 +1,21 @@
 @props(['lot'])
 
-<a href="{{ route('lots.show', $lot) }}" class="block overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:shadow-md">
-    <div class="aspect-video bg-gray-100">
-        @if ($lot->images->isNotEmpty())
-            <div class="flex h-full items-center justify-center text-xs text-gray-400">[зображення лоту]</div>
+@php
+    $firstImage = $lot->images->first()?->path ?? $lot->cover_image_path;
+    $imageUrl = $firstImage ? asset('storage/' . $firstImage) : null;
+@endphp
+
+<a href="{{ route('lots.show', $lot) }}"
+   class="group block overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+   aria-label="Лот: {{ $lot->title }}, поточна ціна {{ number_format($lot->current_price, 2, ',', ' ') }} гривень">
+    <div class="aspect-video overflow-hidden bg-gray-100">
+        @if ($imageUrl)
+            <img src="{{ $imageUrl }}"
+                 alt="Зображення лоту «{{ $lot->title }}»"
+                 loading="lazy"
+                 class="h-full w-full object-cover transition group-hover:scale-105">
         @else
-            <div class="flex h-full items-center justify-center text-xs text-gray-400">Без зображення</div>
+            <div class="flex h-full items-center justify-center text-xs text-gray-400" aria-hidden="true">Без зображення</div>
         @endif
     </div>
     <div class="p-4">
@@ -17,7 +27,7 @@
         @if ($lot->status === 'active')
             <x-countdown :end="$lot->ends_at" class="mt-2 text-xs text-amber-700" />
         @elseif ($lot->status === 'ended')
-            <p class="mt-2 text-xs text-gray-400">Аукціон завершено</p>
+            <p class="mt-2 text-xs text-gray-600">Аукціон завершено</p>
         @endif
     </div>
 </a>

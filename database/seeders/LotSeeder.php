@@ -78,7 +78,7 @@ class LotSeeder extends Seeder
             for ($j = 1; $j <= fake()->numberBetween(1, 4); $j++) {
                 LotImage::create([
                     'lot_id' => $lot->id,
-                    'path' => "lots/placeholder-".fake()->numberBetween(1, 10).".jpg",
+                    'path' => "lots/placeholder-".fake()->numberBetween(1, 10).".svg",
                     'sort_order' => $j,
                 ]);
             }

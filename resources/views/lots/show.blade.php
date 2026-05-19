@@ -12,21 +12,95 @@
 </nav>
 
 <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
-    <div>
-        <div class="aspect-square overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+    <div x-data="{
+            open: false,
+            active: 0,
+            images: @js($lot->images->map(fn($i) => asset('storage/' . $i->path))->all()),
+            titles: @js($lot->images->map(fn($i, $k) => 'Зображення ' . ($k + 1) . ' з ' . $lot->images->count())->all()),
+            next() { this.active = (this.active + 1) % this.images.length; },
+            prev() { this.active = (this.active - 1 + this.images.length) % this.images.length; },
+        }"
+        @keydown.window.escape="open = false"
+        @keydown.window.arrow-right="open && next()"
+        @keydown.window.arrow-left="open && prev()">
+
+        {{-- Main image (clickable to open lightbox) --}}
+        <button type="button"
+                @click="open = true; active = 0"
+                class="block aspect-square w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                aria-label="Відкрити галерею зображень лоту">
             @if ($lot->images->isNotEmpty())
-                <div class="flex h-full items-center justify-center text-gray-400">[галерея зображень — {{ $lot->images->count() }} фото]</div>
+                <img src="{{ asset('storage/' . $lot->images->first()->path) }}"
+                     alt="Головне зображення лоту «{{ $lot->title }}»"
+                     class="h-full w-full object-cover transition hover:scale-105">
             @else
-                <div class="flex h-full items-center justify-center text-gray-400">Без зображень</div>
+                <div class="flex h-full items-center justify-center text-gray-400" aria-hidden="true">Без зображень</div>
             @endif
-        </div>
+        </button>
+
+        {{-- Thumbnail strip --}}
         @if ($lot->images->count() > 1)
-            <div class="mt-2 grid grid-cols-{{ min($lot->images->count(), 4) }} gap-2">
+            <div class="mt-2 grid gap-2" style="grid-template-columns: repeat({{ min($lot->images->count(), 4) }}, minmax(0, 1fr));">
                 @foreach ($lot->images as $img)
-                    <div class="aspect-square rounded border border-gray-200 bg-gray-100 text-xs text-gray-400 flex items-center justify-center">img {{ $loop->iteration }}</div>
+                    <button type="button"
+                            @click="open = true; active = {{ $loop->index }}"
+                            class="aspect-square overflow-hidden rounded border border-gray-200 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            aria-label="Відкрити зображення {{ $loop->iteration }} з {{ $lot->images->count() }}">
+                        <img src="{{ asset('storage/' . $img->path) }}"
+                             alt="Мініатюра зображення {{ $loop->iteration }} лоту «{{ $lot->title }}»"
+                             loading="lazy"
+                             class="h-full w-full object-cover">
+                    </button>
                 @endforeach
             </div>
         @endif
+
+        {{-- Lightbox modal --}}
+        <div x-show="open"
+             x-cloak
+             @click.self="open = false"
+             role="dialog"
+             aria-modal="true"
+             aria-label="Галерея зображень лоту"
+             class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+             x-transition.opacity>
+            <button type="button"
+                    @click="open = false"
+                    aria-label="Закрити галерею"
+                    class="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+
+            <button type="button"
+                    @click.stop="prev()"
+                    x-show="images.length > 1"
+                    aria-label="Попереднє зображення"
+                    class="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white">
+                <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+
+            <figure class="flex w-full max-w-5xl flex-col items-center px-16" style="max-height: 92vh;">
+                <div class="relative w-full overflow-hidden rounded-lg bg-gray-900 shadow-2xl"
+                     style="aspect-ratio: 4 / 3; max-height: 80vh;">
+                    <img :src="images[active]"
+                         :alt="titles[active]"
+                         class="absolute inset-0 h-full w-full object-contain">
+                </div>
+                <figcaption class="mt-4 flex w-full items-center justify-between gap-4 text-sm text-white">
+                    <span x-text="titles[active]" class="font-medium"></span>
+                    <span class="rounded-full bg-white/10 px-3 py-1 text-xs"
+                          x-text="`${active + 1} / ${images.length}`"></span>
+                </figcaption>
+            </figure>
+
+            <button type="button"
+                    @click.stop="next()"
+                    x-show="images.length > 1"
+                    aria-label="Наступне зображення"
+                    class="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white">
+                <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+        </div>
     </div>
 
     <div>

@@ -1,4 +1,4 @@
-<nav class="border-b border-gray-200 bg-white shadow-sm">
+<nav class="border-b border-gray-200 bg-white shadow-sm" aria-label="Основна навігація">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <div class="flex items-center gap-6">
             <a href="{{ route('home') }}" class="text-xl font-bold text-indigo-700">

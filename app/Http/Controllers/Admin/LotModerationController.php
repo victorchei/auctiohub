@@ -17,7 +17,7 @@ class LotModerationController extends Controller
             $query->where('status', $request->status);
         }
         if ($request->filled('q')) {
-            $query->where('title', 'like', '%'.$request->q.'%');
+            $query->whereRaw('LOWER(title) LIKE ?', ['%'.mb_strtolower($request->q).'%']);
         }
         if ($request->boolean('trashed')) {
             $query->onlyTrashed();
@@ -30,6 +30,9 @@ class LotModerationController extends Controller
 
     public function cancel(Lot $lot)
     {
+        if ($lot->status !== 'active') {
+            return back()->with('error', "Лот «{$lot->title}» неможливо скасувати (статус: {$lot->status}).");
+        }
         $lot->update(['status' => 'cancelled']);
 
         return back()->with('status', "Лот «{$lot->title}» скасовано.");
@@ -60,7 +63,8 @@ class LotModerationController extends Controller
 
     public function exportCsv(): StreamedResponse
     {
-        $lots = Lot::withTrashed()->with('seller', 'category')->get();
+        // Eager-load + withCount уникає N+1 для bids
+        $lots = Lot::withTrashed()->with('seller', 'category')->withCount('bids')->get();
 
         return response()->streamDownload(function () use ($lots) {
             $out = fopen('php://output', 'w');
@@ -73,7 +77,7 @@ class LotModerationController extends Controller
                     $lot->category->name ?? '—',
                     $lot->status,
                     $lot->current_price,
-                    $lot->bids()->count(),
+                    $lot->bids_count,
                     $lot->ends_at?->format('Y-m-d H:i'),
                 ]);
             }
