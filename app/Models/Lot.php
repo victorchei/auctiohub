@@ -21,6 +21,7 @@ class Lot extends Model
         'category_id',
         'winner_id',
         'title',
+        'title_en',
         'slug',
         'description',
         'starting_price',
@@ -91,6 +92,14 @@ class Lot extends Model
     public function scopeEndingSoon(Builder $query): Builder
     {
         return $query->active()->orderBy('ends_at');
+    }
+
+    public function getTitleAttribute(string $value): string
+    {
+        if (app()->getLocale() === 'en' && !empty($this->attributes['title_en'])) {
+            return $this->attributes['title_en'];
+        }
+        return $value;
     }
 
     public function getRouteKeyName(): string

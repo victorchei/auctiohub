@@ -1,37 +1,37 @@
-<nav class="border-b border-gray-200 bg-white shadow-sm" aria-label="Основна навігація">
+<nav class="border-b border-gray-200 bg-white shadow-sm" aria-label="{{ __('messages.nav.home') }}">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <div class="flex items-center gap-6">
             <a href="{{ route('home') }}" class="text-xl font-bold text-indigo-700">
                 AuctioHub
             </a>
             <div class="hidden gap-4 md:flex">
-                <a href="{{ route('lots.index') }}" class="text-sm text-gray-700 hover:text-indigo-600">Усі лоти</a>
-                <a href="{{ route('faq') }}" class="text-sm text-gray-700 hover:text-indigo-600">FAQ</a>
-                <a href="{{ route('contact.show') }}" class="text-sm text-gray-700 hover:text-indigo-600">Контакти</a>
+                <a href="{{ route('lots.index') }}" class="text-sm text-gray-700 hover:text-indigo-600">{{ __('messages.nav.lots') }}</a>
+                <a href="{{ route('faq') }}" class="text-sm text-gray-700 hover:text-indigo-600">{{ __('messages.nav.faq') }}</a>
+                <a href="{{ route('contact.show') }}" class="text-sm text-gray-700 hover:text-indigo-600">{{ __('messages.nav.contact') }}</a>
             </div>
         </div>
 
         <form action="{{ route('search') }}" method="GET" class="hidden flex-1 max-w-md mx-6 md:flex">
-            <input type="text" name="q" value="{{ request('q') }}" placeholder="Пошук лоту..."
+            <input type="text" name="q" value="{{ request('q') }}" placeholder="{{ __('messages.nav.search_placeholder') }}"
                    class="w-full rounded-l border border-gray-300 px-3 py-1.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-            <button type="submit" class="rounded-r bg-indigo-600 px-3 text-sm text-white hover:bg-indigo-700">Шукати</button>
+            <button type="submit" class="rounded-r bg-indigo-600 px-3 text-sm text-white hover:bg-indigo-700">{{ __('messages.nav.search_submit') }}</button>
         </form>
 
         <div class="flex items-center gap-3">
             @auth
-                <a href="{{ route('lots.create') }}" class="text-sm text-gray-700 hover:text-indigo-600">+ Лот</a>
-                <a href="{{ route('watchlist.index') }}" class="text-sm text-gray-700 hover:text-indigo-600">★ Список</a>
+                <a href="{{ route('lots.create') }}" class="text-sm text-gray-700 hover:text-indigo-600">{{ __('messages.nav.create_lot') }}</a>
+                <a href="{{ route('watchlist.index') }}" class="text-sm text-gray-700 hover:text-indigo-600">{{ __('messages.nav.watchlist') }}</a>
                 @if (auth()->user()->isAdmin())
-                    <a href="/admin/dashboard" class="text-sm font-medium text-amber-700 hover:text-amber-900">⚙ Адмін</a>
+                    <a href="/admin/dashboard" class="text-sm font-medium text-amber-700 hover:text-amber-900">{{ __('messages.nav.admin') }}</a>
                 @endif
                 <a href="{{ route('dashboard') }}" class="text-sm text-gray-700 hover:text-indigo-600">{{ auth()->user()->name }}</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="text-sm text-gray-500 hover:text-gray-700">Вийти</button>
+                    <button type="submit" class="text-sm text-gray-500 hover:text-gray-700">{{ __('messages.nav.logout') }}</button>
                 </form>
             @else
-                <a href="{{ route('login') }}" class="text-sm text-gray-700 hover:text-indigo-600">Увійти</a>
-                <a href="{{ route('register') }}" class="rounded bg-indigo-600 px-3 py-1.5 text-sm text-white hover:bg-indigo-700">Реєстрація</a>
+                <a href="{{ route('login') }}" class="text-sm text-gray-700 hover:text-indigo-600">{{ __('messages.nav.login') }}</a>
+                <a href="{{ route('register') }}" class="rounded bg-indigo-600 px-3 py-1.5 text-sm text-white hover:bg-indigo-700">{{ __('messages.nav.register') }}</a>
             @endauth
             <div class="border-l border-gray-200 pl-3 text-xs">
                 <a href="?lang=uk" class="@if(app()->getLocale()==='uk') font-bold text-indigo-700 @else text-gray-500 hover:text-indigo-600 @endif">UA</a>

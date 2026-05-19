@@ -10,29 +10,49 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
+        // [uk => en] with children [uk => en]
         $tree = [
-            'Антикваріат' => ['Монети', 'Старовинні меблі', 'Порцеляна'],
-            'Електроніка' => ['Телефони', 'Ноутбуки', 'Фототехніка'],
-            'Мистецтво' => ['Картини', 'Скульптура'],
-            'Книги та автографи' => [],
-            'Прикраси' => ['Золото', 'Срібло'],
-            'Інструменти' => [],
-            'Колекційні' => ['Марки', 'Винні етикетки'],
-            'Спорттовари' => [],
+            ['Антикваріат', 'Antiques', [
+                ['Монети', 'Coins'],
+                ['Старовинні меблі', 'Antique Furniture'],
+                ['Порцеляна', 'Porcelain'],
+            ]],
+            ['Електроніка', 'Electronics', [
+                ['Телефони', 'Phones'],
+                ['Ноутбуки', 'Laptops'],
+                ['Фототехніка', 'Camera Equipment'],
+            ]],
+            ['Мистецтво', 'Art', [
+                ['Картини', 'Paintings'],
+                ['Скульптура', 'Sculpture'],
+            ]],
+            ['Книги та автографи', 'Books & Autographs', []],
+            ['Прикраси', 'Jewellery', [
+                ['Золото', 'Gold'],
+                ['Срібло', 'Silver'],
+            ]],
+            ['Інструменти', 'Tools', []],
+            ['Колекційні', 'Collectibles', [
+                ['Марки', 'Stamps'],
+                ['Винні етикетки', 'Wine Labels'],
+            ]],
+            ['Спорттовари', 'Sporting Goods', []],
         ];
 
-        foreach ($tree as $parentName => $children) {
+        foreach ($tree as [$parentName, $parentNameEn, $children]) {
             $parent = Category::create([
-                'name' => $parentName,
-                'slug' => Str::slug($parentName),
-                'parent_id' => null,
+                'name'        => $parentName,
+                'name_en'     => $parentNameEn,
+                'slug'        => Str::slug($parentName),
+                'parent_id'   => null,
                 'description' => "Розділ «{$parentName}» — лоти даної категорії.",
             ]);
 
-            foreach ($children as $childName) {
+            foreach ($children as [$childName, $childNameEn]) {
                 Category::create([
-                    'name' => $childName,
-                    'slug' => Str::slug($parentName.' '.$childName),
+                    'name'      => $childName,
+                    'name_en'   => $childNameEn,
+                    'slug'      => Str::slug($parentName.' '.$childName),
                     'parent_id' => $parent->id,
                     'description' => "{$childName} ({$parentName}).",
                 ]);

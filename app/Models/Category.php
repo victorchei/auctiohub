@@ -12,7 +12,15 @@ class Category extends Model
     /** @use HasFactory<\Database\Factories\CategoryFactory> */
     use HasFactory;
 
-    protected $fillable = ['name', 'slug', 'parent_id', 'description'];
+    protected $fillable = ['name', 'name_en', 'slug', 'parent_id', 'description'];
+
+    public function getNameAttribute(string $value): string
+    {
+        if (app()->getLocale() === 'en' && !empty($this->attributes['name_en'])) {
+            return $this->attributes['name_en'];
+        }
+        return $value;
+    }
 
     public function parent(): BelongsTo
     {

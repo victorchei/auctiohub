@@ -21,31 +21,66 @@ class LotSeeder extends Seeder
             $leafCategories = Category::all();
         }
 
+        // [uk, en]
         $titles = [
-            'Монета СРСР 1961 року', 'iPhone 14 Pro Max 256 GB', 'Картина олією "Захід сонця"',
-            'Книга з підписом автора', 'Перстень із гранатом', 'Дрель-шуруповерт Makita',
-            'Карта виноградників 1908 р.', 'Тенісна ракетка Wilson Pro Staff', 'Старовинна скриня',
-            'Колекція марок СРСР 1970-х', 'Зеркальна камера Canon EOS R6', 'Намисто з перлами',
-            'Стіл XIX століття', 'Підставка для книг', 'Світлини Парижа 1960 р.',
-            'Лижі гоночні Atomic', 'Скрипка ручної роботи', 'Підручник з фізики 1955',
-            'Браслет золотий', 'Електрогітара Fender Stratocaster', 'Кубок чемпіонату',
-            'Атлас світу 1937 р.', 'Фарфорова чашка з рожами', 'Шахи з кістки',
-            'Бінокль морський', 'Малюнок в стилі модерн', 'Книга кулінарних рецептів',
-            'Сережки з топазом', 'Швейна машинка Singer', 'Гарпун для риболовлі',
-            'Поштова марка 1925 року', 'Колекційна модель авто', 'Старовинні гральні карти',
-            'Пейзаж акварель', 'Хайкінгові черевики Lowa', 'Інструменти столярні в наборі',
-            'Японська лялька', 'Фотоальбом сімейний', 'Кольє з аквамарином',
-            'Колекційний фломастер Caran d\'Ache', 'Тарілка з гербом', 'Скейтборд професійний',
-            'Стара мапа Києва', 'Фонограф Edison', 'Зошит з конспектами математика',
-            'Гольф-клуб набір', 'Картка футболіста 1986', 'Парасоля з ручкою з дерева',
-            'Аудіокасета унікальна', 'Перо для каліграфії', 'Сувенірна табличка',
+            ['Монета СРСР 1961 року',                   'USSR Coin 1961'],
+            ['iPhone 14 Pro Max 256 GB',                'iPhone 14 Pro Max 256 GB'],
+            ['Картина олією "Захід сонця"',             'Oil Painting "Sunset"'],
+            ['Книга з підписом автора',                 'Author-Signed Book'],
+            ['Перстень із гранатом',                    'Garnet Ring'],
+            ['Дрель-шуруповерт Makita',                 'Makita Cordless Drill'],
+            ['Карта виноградників 1908 р.',             'Vineyard Map 1908'],
+            ['Тенісна ракетка Wilson Pro Staff',        'Wilson Pro Staff Tennis Racket'],
+            ['Старовинна скриня',                       'Antique Chest'],
+            ['Колекція марок СРСР 1970-х',              'USSR Stamps Collection 1970s'],
+            ['Зеркальна камера Canon EOS R6',           'Canon EOS R6 Mirrorless Camera'],
+            ['Намисто з перлами',                       'Pearl Necklace'],
+            ['Стіл XIX століття',                       '19th Century Table'],
+            ['Підставка для книг',                      'Bookstand'],
+            ['Світлини Парижа 1960 р.',                 'Paris Photos 1960'],
+            ['Лижі гоночні Atomic',                     'Atomic Racing Skis'],
+            ['Скрипка ручної роботи',                   'Handcrafted Violin'],
+            ['Підручник з фізики 1955',                 'Physics Textbook 1955'],
+            ['Браслет золотий',                         'Gold Bracelet'],
+            ['Електрогітара Fender Stratocaster',       'Fender Stratocaster Electric Guitar'],
+            ['Кубок чемпіонату',                        'Championship Trophy'],
+            ['Атлас світу 1937 р.',                     'World Atlas 1937'],
+            ['Фарфорова чашка з рожами',                'Porcelain Cup with Roses'],
+            ['Шахи з кістки',                           'Bone Chess Set'],
+            ['Бінокль морський',                        'Marine Binoculars'],
+            ['Малюнок в стилі модерн',                  'Art Nouveau Drawing'],
+            ['Книга кулінарних рецептів',               'Cookbook'],
+            ['Сережки з топазом',                       'Topaz Earrings'],
+            ['Швейна машинка Singer',                   'Singer Sewing Machine'],
+            ['Гарпун для риболовлі',                    'Fishing Harpoon'],
+            ['Поштова марка 1925 року',                 'Postage Stamp 1925'],
+            ['Колекційна модель авто',                  'Collectible Car Model'],
+            ['Старовинні гральні карти',                'Antique Playing Cards'],
+            ['Пейзаж акварель',                         'Watercolour Landscape'],
+            ['Хайкінгові черевики Lowa',                'Lowa Hiking Boots'],
+            ['Інструменти столярні в наборі',           'Carpentry Tool Set'],
+            ['Японська лялька',                         'Japanese Doll'],
+            ['Фотоальбом сімейний',                     'Family Photo Album'],
+            ['Кольє з аквамарином',                     'Aquamarine Necklace'],
+            ["Колекційний фломастер Caran d'Ache",      "Caran d'Ache Collector's Marker"],
+            ['Тарілка з гербом',                        'Coat-of-Arms Plate'],
+            ['Скейтборд професійний',                   'Professional Skateboard'],
+            ['Стара мапа Києва',                        'Old Map of Kyiv'],
+            ['Фонограф Edison',                         'Edison Phonograph'],
+            ['Зошит з конспектами математика',          'Mathematician\'s Notebook'],
+            ['Гольф-клуб набір',                        'Golf Club Set'],
+            ['Картка футболіста 1986',                  'Football Player Card 1986'],
+            ['Парасоля з ручкою з дерева',              'Umbrella with Wooden Handle'],
+            ['Аудіокасета унікальна',                   'Rare Audio Cassette'],
+            ['Перо для каліграфії',                     'Calligraphy Pen'],
+            ['Сувенірна табличка',                      'Souvenir Plaque'],
         ];
 
         $totalLots = min(count($titles), 50);
         $now = now();
 
         for ($i = 0; $i < $totalLots; $i++) {
-            $title = $titles[$i];
+            [$title, $titleEn] = $titles[$i];
             $seller = $sellers->random();
             $category = $leafCategories->random();
             $startingPrice = fake()->randomFloat(2, 50, 5000);
@@ -63,8 +98,9 @@ class LotSeeder extends Seeder
             $lot = Lot::create([
                 'seller_id' => $seller->id,
                 'category_id' => $category->id,
-                'title' => $title,
-                'slug' => Str::slug($title).'-'.($i + 1),
+                'title'    => $title,
+                'title_en' => $titleEn,
+                'slug'     => Str::slug($title).'-'.($i + 1),
                 'description' => fake()->paragraphs(3, true),
                 'starting_price' => $startingPrice,
                 'current_price' => $startingPrice,
