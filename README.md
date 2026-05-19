@@ -13,7 +13,7 @@
 | PHP | 8.5 (>=8.2) |
 | Framework | Laravel 11.52 |
 | Auth | Laravel Breeze (Blade + Alpine, default Tailwind) |
-| БД | MySQL 8 через Docker (`docker-compose.yml`) |
+| БД | На вибір: **SQLite** (для 2 курсу, БЕЗ Docker) / **MySQL** (XAMPP, MAMP, Laragon, brew, або Docker) — див. розділ «3. База даних» |
 | Queue | database driver |
 | Mail | log driver (для розробки) |
 | Test | Pest |
@@ -56,12 +56,50 @@ MAIL_FROM_ADDRESS="hello@auctiohub.test"
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
-### 3. MySQL через Docker
+### 3. База даних — оберіть один з 3 варіантів
+
+#### Варіант A: SQLite (найпростіше, БЕЗ Docker) ⭐ для 2 курсу
+
+Студенти 2 курсу ще не вивчали Docker — це найкоротший шлях.
+
+```bash
+mkdir -p database
+touch database/database.sqlite
+```
+
+Виправити `.env`:
+```ini
+DB_CONNECTION=sqlite
+DB_DATABASE=/absolute/path/to/auctiohub/database/database.sqlite
+# Або відносний — Laravel розв'яже:
+# DB_DATABASE=database/database.sqlite
+```
+
+Решту `DB_*` рядків — видалити або закоментувати (`#`).
+
+> ⚠️ **Обмеження SQLite**: пошук кирилицею case-sensitive (`Намисто` працює, `намисто` — ні). Це специфіка SQLite без ICU. Для повноцінного пошуку — Варіант B або C. Усе інше працює ідентично.
+
+#### Варіант B: Локальний MySQL через XAMPP / MAMP / Laragon (БЕЗ Docker)
+
+Для тих, хто вже встановив XAMPP/MAMP/Laragon для попередніх лабораторних:
+
+1. **XAMPP / MAMP**: запустити MySQL (порт 3306), відкрити phpMyAdmin → `Створити БД 'auctiohub'` (utf8mb4_unicode_ci)
+2. **Laragon (Windows)**: автоматично стартує MySQL, через GUI створити БД
+3. **macOS Homebrew**: `brew install mariadb && brew services start mariadb && mysql -u root -e "CREATE DATABASE auctiohub CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"`
+4. **Linux**: `sudo apt install mariadb-server && sudo mysql -e "CREATE DATABASE auctiohub CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"`
+
+Тоді у `.env` залишити стандартний `DB_CONNECTION=mysql` (як вище), вказати свої `DB_USERNAME`/`DB_PASSWORD` (зазвичай `root` без пароля для XAMPP/MAMP).
+
+#### Варіант C: MySQL через Docker (продакшн-подібний)
+
+Якщо вже знайомий з Docker — найшвидше:
+
 ```bash
 docker compose up -d
-# Чекати ~10 сек поки MySQL зробить healthcheck
-docker compose ps
+docker compose ps    # чекати healthy ~10 сек
 ```
+
+Дані з `docker-compose.yml` уже відповідають `.env.example` — додаткові правки не потрібні.
 
 ### 4. Міграції + сіди
 ```bash
