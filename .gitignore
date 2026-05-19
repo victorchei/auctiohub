@@ -1,3 +1,14 @@
+# ============================================================================
+#  Стандартний Laravel .gitignore
+# ----------------------------------------------------------------------------
+#  ⚠️ NOTE для студентів: цей репо НАВЧАЛЬНИЙ — деякі файли, що ЗАЗВИЧАЙ
+#  ігноруються (.env, database/database.sqlite), ТУТ закомічено навмисно,
+#  щоб ти міг просто clone-i-run без додаткового налаштування.
+#  Деталі — у [STUDENT_QUICKSTART.md](STUDENT_QUICKSTART.md).
+#
+#  У СВОЇЙ курсовій — НЕ комітити .env (там можуть бути секрети!).
+# ============================================================================
+
 /.phpunit.cache
 /node_modules
 /public/build
@@ -6,9 +17,16 @@
 /storage/*.key
 /storage/pail
 /vendor
-.env
+
+# .env — НАВЧАЛЬНО закомічено (зазвичай має бути в .gitignore!)
+# .env
 .env.backup
 .env.production
+
+# database/database.sqlite — НАВЧАЛЬНО закомічено для quick-start
+# (зазвичай має бути в .gitignore — це локальна БД студента)
+# database/database.sqlite
+
 .phpactor.json
 .phpunit.result.cache
 Homestead.json
