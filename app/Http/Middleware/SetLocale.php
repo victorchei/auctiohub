@@ -23,6 +23,9 @@ class SetLocale
         $cookieLocale = $request->cookie('locale');
         if (in_array($cookieLocale, ['uk', 'en'], true)) {
             app()->setLocale($cookieLocale);
+        } else {
+            // Default to Ukrainian regardless of APP_LOCALE — this is a UA course project
+            app()->setLocale('uk');
         }
 
         return $next($request);

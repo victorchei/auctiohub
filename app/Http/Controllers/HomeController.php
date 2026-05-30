@@ -22,10 +22,13 @@ class HomeController extends Controller
             ->get();
 
         $categories = Category::whereNull('parent_id')
-            ->withCount('lots')
-            ->orderByDesc('lots_count')
-            ->limit(8)
-            ->get();
+            ->withCount(['lots as lots_count' => fn ($q) => $q->where('status', 'active')])
+            ->with(['children' => fn ($q) => $q->withCount(['lots as lots_count' => fn ($q2) => $q2->where('status', 'active')])])
+            ->get()
+            ->each(fn ($cat) => $cat->lots_count += $cat->children->sum('lots_count'))
+            ->sortByDesc('lots_count')
+            ->take(8)
+            ->values();
 
         return view('home', compact('featuredLots', 'endingSoon', 'categories'));
     }
