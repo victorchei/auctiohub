@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('content')
-<h1 class="text-2xl font-bold">Часті запитання</h1>
+<h1 class="text-2xl font-bold">{{ __('messages.faq.title') }}</h1>
 
 <div class="mt-6 space-y-3">
     @foreach ($items as $item)

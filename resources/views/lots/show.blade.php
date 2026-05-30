@@ -2,8 +2,8 @@
 
 @section('content')
 <nav class="mb-4 text-xs text-gray-500">
-    <a href="{{ route('home') }}" class="hover:underline">Головна</a> ›
-    <a href="{{ route('lots.index') }}" class="hover:underline">Лоти</a> ›
+    <a href="{{ route('home') }}" class="hover:underline">{{ __('messages.nav.home') }}</a> ›
+    <a href="{{ route('lots.index') }}" class="hover:underline">{{ __('messages.nav.lots') }}</a> ›
     @if ($lot->category->parent)
         <a href="{{ route('categories.show', $lot->category->parent) }}" class="hover:underline">{{ $lot->category->parent->name }}</a> ›
     @endif
@@ -28,13 +28,13 @@
         <button type="button"
                 @click="open = true; active = 0"
                 class="block aspect-square w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                aria-label="Відкрити галерею зображень лоту">
+                aria-label="{{ __('messages.lots.no_images') }}">
             @if ($lot->images->isNotEmpty())
                 <img src="{{ asset('storage/' . $lot->images->first()->path) }}"
-                     alt="Головне зображення лоту «{{ $lot->title }}»"
+                     alt="{{ __('messages.lot.image_alt', ['title' => $lot->title]) }}"
                      class="h-full w-full object-cover transition hover:scale-105">
             @else
-                <div class="flex h-full items-center justify-center text-gray-400" aria-hidden="true">Без зображень</div>
+                <div class="flex h-full items-center justify-center text-gray-400" aria-hidden="true">{{ __('messages.lots.no_images') }}</div>
             @endif
         </button>
 
@@ -106,21 +106,21 @@
     <div>
         <h1 class="text-3xl font-bold">{{ $lot->title }}</h1>
         <p class="mt-2 text-sm text-gray-500">
-            Продавець: <span class="font-medium">{{ $lot->seller->name }}</span>
-            · Категорія: <a href="{{ route('categories.show', $lot->category) }}" class="text-indigo-600 hover:underline">{{ $lot->category->name }}</a>
+            {{ __('messages.lots.seller') }}: <span class="font-medium">{{ $lot->seller->name }}</span>
+            · {{ __('messages.lots.filter_category') }}: <a href="{{ route('categories.show', $lot->category) }}" class="text-indigo-600 hover:underline">{{ $lot->category->name }}</a>
         </p>
 
         <div class="mt-6 rounded-lg border border-gray-200 bg-white p-5">
-            <div class="text-xs uppercase text-gray-500">Поточна ціна</div>
+            <div class="text-xs uppercase text-gray-500">{{ __('messages.lot.current_price') }}</div>
             <div class="text-4xl font-bold text-indigo-700">{{ number_format($lot->current_price, 2, ',', ' ') }} ₴</div>
-            <div class="mt-2 text-xs text-gray-500">Стартова: {{ number_format($lot->starting_price, 2, ',', ' ') }} ₴ · Крок: {{ number_format($lot->bid_increment, 2, ',', ' ') }} ₴</div>
+            <div class="mt-2 text-xs text-gray-500">{{ __('messages.lot.starting_price') }}: {{ number_format($lot->starting_price, 2, ',', ' ') }} ₴ · {{ __('messages.lot.bid_increment') }}: {{ number_format($lot->bid_increment, 2, ',', ' ') }} ₴</div>
 
             @if ($lot->status === 'active')
                 <x-countdown :end="$lot->ends_at" class="mt-3 text-sm font-medium text-amber-700" />
             @elseif ($lot->status === 'ended')
-                <p class="mt-3 text-sm font-medium text-gray-600">Завершено {{ $lot->ends_at->diffForHumans() }}</p>
+                <p class="mt-3 text-sm font-medium text-gray-600">{{ __('messages.lots.ended_ago') }} {{ $lot->ends_at->diffForHumans() }}</p>
                 @if ($lot->winner)
-                    <p class="mt-1 text-sm">🏆 Переможець: <span class="font-medium">{{ $lot->winner->name }}</span></p>
+                    <p class="mt-1 text-sm">{{ __('messages.lot.winner') }}: <span class="font-medium">{{ $lot->winner->name }}</span></p>
                 @endif
             @endif
 
@@ -130,19 +130,19 @@
                         @csrf
                         <input type="number" step="0.01" name="amount" min="{{ $lot->minNextBid() }}" placeholder="≥ {{ number_format($lot->minNextBid(), 2, ',', ' ') }}"
                                class="flex-1 rounded border border-gray-300 px-3 py-2 text-sm" required>
-                        <button type="submit" class="rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">Ставка</button>
+                        <button type="submit" class="rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">{{ __('messages.lots.bid_button') }}</button>
                     </form>
                     @error('amount')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                 @endif
                 <form method="POST" action="{{ route('watchlist.toggle', $lot) }}" class="mt-3">
                     @csrf
                     <button type="submit" class="text-sm text-indigo-600 hover:underline">
-                        {{ $watching ? '★ У вашому списку — прибрати' : '☆ Додати у спостереження' }}
+                        {{ $watching ? __('messages.lot.watching') : __('messages.lot.watch') }}
                     </button>
                 </form>
             @else
                 <p class="mt-4 text-sm text-gray-500">
-                    <a href="{{ route('login') }}" class="text-indigo-600 hover:underline">Увійдіть</a> щоб робити ставки.
+                    <a href="{{ route('login') }}" class="text-indigo-600 hover:underline">{{ __('messages.nav.login') }}</a> — {{ __('messages.lot.login_to_bid') }}
                 </p>
             @endauth
         </div>
@@ -152,9 +152,9 @@
 </div>
 
 <section class="mt-12">
-    <h2 class="text-xl font-bold">Історія ставок ({{ $lot->bids->count() }})</h2>
+    <h2 class="text-xl font-bold">{{ __('messages.lots.bid_history', ['count' => $lot->bids->count()]) }}</h2>
     @if ($lot->bids->isEmpty())
-        <p class="mt-2 text-sm text-gray-500">Ставок ще немає. Будьте першим!</p>
+        <p class="mt-2 text-sm text-gray-500">{{ __('messages.lots.no_bids') }}</p>
     @else
         <ol class="mt-3 divide-y divide-gray-200 rounded-lg border border-gray-200 bg-white">
             @foreach ($lot->bids as $bid)
@@ -168,16 +168,16 @@
 </section>
 
 <section class="mt-12">
-    <h2 class="text-xl font-bold">Коментарі ({{ $lot->comments->count() }})</h2>
+    <h2 class="text-xl font-bold">{{ __('messages.lots.comments_title', ['count' => $lot->comments->count()]) }}</h2>
 
     @auth
         <form method="POST" action="{{ route('comments.store', $lot) }}" class="mt-4 rounded-lg border border-gray-200 bg-white p-4">
             @csrf
-            <textarea name="body" rows="3" placeholder="Ваш коментар..." required
+            <textarea name="body" rows="3" placeholder="{{ __('messages.lots.comment_placeholder') }}" required
                       class="block w-full rounded border border-gray-300 px-3 py-2 text-sm">{{ old('body') }}</textarea>
             @error('body')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             <div class="mt-2 flex justify-end">
-                <button type="submit" class="rounded bg-indigo-600 px-4 py-1.5 text-sm text-white hover:bg-indigo-700">Опублікувати</button>
+                <button type="submit" class="rounded bg-indigo-600 px-4 py-1.5 text-sm text-white hover:bg-indigo-700">{{ __('messages.lots.comment_submit') }}</button>
             </div>
         </form>
     @endauth
@@ -198,7 +198,7 @@
 
 @if ($similar->isNotEmpty())
 <section class="mt-12">
-    <h2 class="text-xl font-bold">Схожі лоти</h2>
+    <h2 class="text-xl font-bold">{{ __('messages.lots.similar') }}</h2>
     <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         @foreach ($similar as $s)
             <x-lot-card :lot="$s" />

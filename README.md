@@ -8,7 +8,6 @@
 
 ⚠️ **Навчально закомічено** (зазвичай у `.gitignore`): `.env`, `database/database.sqlite`, `public/build/`. Для зручного clone-and-run. **У своїй курсовій НЕ комітити!**
 
-
 **Призначення.** Робочий приклад-еталон Laravel-варіанту курсової (Опція A, до 100 балів). Демонструє Advanced рівень функціональності. Студент бачить, як одна реалізація вкладається в усі вимоги [coursework/feature-catalog.md](../php-labs/coursework/feature-catalog.md), і використовує патерни для своєї теми.
 
 ⚠️ **НЕ копіювати один-в-один.** Це не варіант з 30 — викладач помітить. Адаптуй структуру під свою тему (mapping див. кінець файлу).
@@ -16,7 +15,7 @@
 ## Stack
 
 | Layer | Версія / вибір |
-|---|---|
+| --- | --- |
 | PHP | 8.5 (>=8.2) |
 | Framework | Laravel 11.52 |
 | Auth | Laravel Breeze (Blade + Alpine, default Tailwind) |
@@ -63,50 +62,51 @@ MAIL_FROM_ADDRESS="hello@auctiohub.test"
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
-### 3. База даних — оберіть один з 3 варіантів
+### 3. База даних
 
-#### Варіант A: SQLite (найпростіше, БЕЗ Docker) ⭐ для 2 курсу
+**Швидкий вибір:**
 
-Студенти 2 курсу ще не вивчали Docker — це найкоротший шлях.
+| Ситуація | Рішення |
+| --- | --- |
+| Перший запуск, хочу побачити як працює | **SQLite** — нічого не встановлювати |
+| Університет вимагає MySQL | **Локальний MySQL** (XAMPP/MAMP/brew) |
+| Знайомий з Docker | **Docker** — одна команда |
 
-```bash
-mkdir -p database
-touch database/database.sqlite
-```
+#### Варіант A: SQLite ⭐ рекомендовано для знайомства
 
-Виправити `.env`:
+Нічого встановлювати не треба. Просто виправити `.env`:
+
 ```ini
 DB_CONNECTION=sqlite
-DB_DATABASE=/absolute/path/to/auctiohub/database/database.sqlite
-# Або відносний — Laravel розв'яже:
-# DB_DATABASE=database/database.sqlite
+DB_DATABASE=database/database.sqlite
 ```
 
-Решту `DB_*` рядків — видалити або закоментувати (`#`).
+Решту `DB_HOST`, `DB_PORT`, `DB_DATABASE=auctiohub`, `DB_USERNAME`, `DB_PASSWORD` — закоментувати або видалити.
 
-> ⚠️ **Обмеження SQLite**: пошук кирилицею case-sensitive (`Намисто` працює, `намисто` — ні). Це специфіка SQLite без ICU. Для повноцінного пошуку — Варіант B або C. Усе інше працює ідентично.
+> ⚠️ **Обмеження SQLite**: пошук кирилицею регістрозалежний (`Намисто` знаходить, `намисто` — ні). Для повноцінного пошуку потрібен MySQL.
 
-#### Варіант B: Локальний MySQL через XAMPP / MAMP / Laragon (БЕЗ Docker)
+#### Варіант B: Локальний MySQL (XAMPP / MAMP / brew)
 
-Для тих, хто вже встановив XAMPP/MAMP/Laragon для попередніх лабораторних:
+1. **XAMPP / MAMP (Windows/macOS)**: запустіть MySQL, відкрийте phpMyAdmin → створіть БД `auctiohub` (utf8mb4_unicode_ci).
+2. **macOS Homebrew**:
 
-1. **XAMPP / MAMP**: запустити MySQL (порт 3306), відкрити phpMyAdmin → `Створити БД 'auctiohub'` (utf8mb4_unicode_ci)
-2. **Laragon (Windows)**: автоматично стартує MySQL, через GUI створити БД
-3. **macOS Homebrew**: `brew install mariadb && brew services start mariadb && mysql -u root -e "CREATE DATABASE auctiohub CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"`
-4. **Linux**: `sudo apt install mariadb-server && sudo mysql -e "CREATE DATABASE auctiohub CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"`
+   ```bash
+   brew install mariadb && brew services start mariadb
+   mysql -u root -e "CREATE DATABASE auctiohub CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+   ```
 
-Тоді у `.env` залишити стандартний `DB_CONNECTION=mysql` (як вище), вказати свої `DB_USERNAME`/`DB_PASSWORD` (зазвичай `root` без пароля для XAMPP/MAMP).
+3. **Linux**: `sudo apt install mariadb-server && sudo mysql -e "CREATE DATABASE auctiohub CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"`
 
-#### Варіант C: MySQL через Docker (продакшн-подібний)
+У `.env` залишити `DB_CONNECTION=mysql`, вказати свої `DB_USERNAME`/`DB_PASSWORD` (для XAMPP/MAMP зазвичай `root` без пароля).
 
-Якщо вже знайомий з Docker — найшвидше:
+#### Варіант C: MySQL через Docker
 
 ```bash
-docker compose up -d
-docker compose ps    # чекати healthy ~10 сек
+docker compose up -d   # запускає MySQL 8 на порту 3306
+docker compose ps      # дочекатись статусу healthy (~10 сек)
 ```
 
-Дані з `docker-compose.yml` уже відповідають `.env.example` — додаткові правки не потрібні.
+Параметри з `docker-compose.yml` уже відповідають `.env.example` — правок не потрібно.
 
 ### 4. Міграції + сіди
 ```bash

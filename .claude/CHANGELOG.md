@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-05-30
+
+### Session 2 — Doc review fixes: translations, dashboard UX, lab docs
+
+Fixed:
+
+- **Translation coverage** — added `lots.*`, `search.*` (title/enter_query/results_meta), `dashboard.*`, `watchlist.*`, `faq.*` keys to `lang/uk/messages.php` + `lang/en/messages.php`
+- **search/index.blade.php** — replaced all hardcoded Ukrainian strings with `__('messages.search.*')` keys
+- **lots/index.blade.php** — all filter labels, sort options, result count, empty state now use translation keys
+- **lots/show.blade.php** — breadcrumbs, seller label, price labels, bid history, comments, watchlist buttons, similar lots section now translated
+- **watchlist/index.blade.php** + **faq/index.blade.php** — page titles/descriptions now use translation keys
+- **dashboard.blade.php** — replaced blank "You're logged in!" with proper user hub (welcome, quick-action cards for lots/create/watchlist/profile, admin link)
+- **navigation.blade.php** (app layout) — added "← На сайт" and "Усі лоти" links so logged-in users can navigate to the public site
+- **lr4/assignment.md** — split confusing launch instruction into separate demo vs student-work commands with clear `cd lr4/demo` vs `cd lr4` distinction
+- **lr5/assignment.md** — added decision table (SQLite vs MySQL), macOS Homebrew MySQL command, Windows XAMPP guide, documented v31 as optional bonus variant
+- **README.md** — replaced 3-variant DB section header with quick-choice table; clarified that SQLite is the recommended starting point
+
+Tests: 44 tests / 103 assertions — all pass (pre-existing PHP 8.5 PDO deprecation warnings are non-fatal, documented in CLAUDE.md)
+
 ## 2026-05-18
 
 ### Session 1 — Phase 0: Repo Init
